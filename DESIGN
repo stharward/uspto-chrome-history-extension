@@ -1,0 +1,14 @@
+Use case:
+
+- User clicks on extension button
+- Webpage is generated with history from supported websites [0]
+	- Future: user can limit how far back the history goes
+- User unselects search entries
+- User clicks "Generate" button
+- New print-ready webpage is generated with selected history entries
+
+Features needed to accomplish:
+- read entries from history
+- filter entries from history
+- generate HTML from list of history entries
+- respond to user input from generated HTML page
