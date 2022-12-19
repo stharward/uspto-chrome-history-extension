@@ -3,7 +3,7 @@
 
   "name": "Search History Generator",
   "description": "Generate a search history for supported websites that can easily be 'printed' into e-Red Folder",
-  "version": "0.1",
+  "version": "1",
 
   "browser_action": {
     "default_icon": "clock.png" // TODO: draw a new icon

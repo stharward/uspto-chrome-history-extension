@@ -41,6 +41,8 @@ function generateHistoryPage() {
 
   document.getElementById('selection_div').textContent = '';
   document.getElementById('instructions_div').textContent = '';
+
+  window.print();
 }
 
 window.onload = function() {
