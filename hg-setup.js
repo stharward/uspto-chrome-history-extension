@@ -1,5 +1,5 @@
 /*
-Written by Soren Harward <soren.harward@uspto.gov>, May 2015
+Written by Soren Harward <soren.harward@uspto.gov>, 2015-2021
 
 This software was made by an employee of the United States Government as part
 of his official duties. As such, it is not subject to copyright in the United
