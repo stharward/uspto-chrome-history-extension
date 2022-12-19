@@ -9,6 +9,7 @@ function makeCheckBoxToggler(mastercb, cblist) {
 function renderHistoryTable(divName, website, historyData) {
   var d = document.getElementById(divName);
 
+  // generate header
   var t = document.createElement('table');
   t.className = 'selectable';
   var h = t.createTHead();
@@ -22,12 +23,20 @@ function renderHistoryTable(divName, website, historyData) {
   hc.colSpan = 2;
   hc.textContent = "searches on " + website;
 
-  childcbs = [];
+  // generate body
+  var childcbs = [];
   var tBody = document.createElement('tbody');
+  var lastvisit = 0;
+  var border = ''
   for (var i = 0; i < historyData.length; ++i) {
+    // put a subtle visual separator between queries that happened more than 1 hour apart
+    var brd = ((lastvisit - historyData[i]['lastvisit']) > 3600000) ? 'thin solid #009' : 'none';
+    lastvisit = historyData[i]['lastvisit'];
+
+    console.log("border is", brd);
+
     var r = tBody.insertRow(i);
     var tc = r.insertCell(0);
-    tc.textContent = "";
     var cb = document.createElement('input');
     cb.type = 'checkbox';
     cb.className = 'historyentry';
@@ -35,10 +44,13 @@ function renderHistoryTable(divName, website, historyData) {
     cb.checked = true;
     childcbs.push(cb);
     tc.appendChild(cb);
+    tc.style.borderTop = brd;
     tc = r.insertCell(1);
-    tc.textContent = historyData[i]['timestamp']
+    tc.textContent = historyData[i]['timestamp'];
+    tc.style.borderTop = brd;
     tc = r.insertCell(2);
     tc.textContent = historyData[i]['query'];
+    tc.style.borderTop = brd;
   }
   hcb.onchange = makeCheckBoxToggler(hcb,childcbs);
   t.appendChild(tBody);
@@ -49,8 +61,8 @@ function renderHistoryTable(divName, website, historyData) {
 function makeHistoryItemProcessor(divName, website, queryExtractionF) {
   return function historyItemProcessor(historyItems) {
     var tableEntries = [];
+    var queries = {}
     for (var i = 0; i < historyItems.length; ++i) {
-      // TODO: find the first visit, not the most recent
       var e = {
         'website': website,
         'url': historyItems[i].url,
@@ -60,7 +72,14 @@ function makeHistoryItemProcessor(divName, website, queryExtractionF) {
         'id': historyItems[i].id
       };
       if (e['query']) {
-        tableEntries.push(e);
+        // filter out duplicate queries; Chrome creates different history entries 
+        // when the user goes to the 2nd, 3rd, etc. page of search results, because
+        // these have unique URLs.  However, for the purposes of a prior art search
+        // history, it's all just one query.
+        if (!(e['query'] in queries)) {
+          tableEntries.push(e);
+          queries[e['query']] = true;
+        }
       }
     }
     renderHistoryTable(divName, website, tableEntries);
