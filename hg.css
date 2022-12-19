@@ -2,6 +2,24 @@ body {
   font-size: 10pt;
 }
 
+table.selectable {
+  border-collapse: collapse;
+}
+
+table.selectable thead {
+  font-size: 120%;
+  font-weight: bold;
+  color: #006;
+}
+
+table.selectable td {
+  padding: 3pt 5pt;
+}
+
+table.selectable tbody tr:nth-child(odd) {
+  background: #eee;
+}
+
 table.printable {
   font-size: 11pt;
   border-collapse: collapse;
