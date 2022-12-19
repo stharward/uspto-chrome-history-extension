@@ -155,12 +155,41 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
           s = '<dl>';
           tc = 0;
           for (var i = 0; i < u.length; i++) {
+            // parse keywords
             if (u[i].substr(0,2) == 'q=') {
-              s += '<dt>Keyword ' + (++tc).toString() + '</dt>';
-              s += '<dd>' + decodeURIComponent(u[i].substr(2).replace(/\+/g,' ').replace(/,/g,' OR ')) + '</dd>';
+              s += '<dt>Keyword Group ' + (++tc).toString() + '</dt>';
+              s += '<dd>[' + decodeURIComponent(u[i].substr(2).replace(/\+/g,' ').replace(/,/g,'] OR [')) + ']</dd>';
+            // parse inventor(s)
+            } else if (u[i].substr(0,9) == 'inventor=') {
+              s += '<dt>Inventor(s)</dt>';
+              s += '<dd>[' + decodeURIComponent(u[i].substr(9).replace(/\+/g,' ').replace(/,/g,'] OR [')) + ']</dd>';
+            // parse CPC
             } else if (u[i].substr(0,4) == 'cpc=') {
               s += '<dt>CPC</dt>';
               s += '<dd>' + decodeURIComponent(u[i].substr(4)) + '</dd>';
+            // parse dates
+            } else if (u[i].substr(0,7) == 'before=') {
+              s += '<dt>Before</dt>';
+              l = decodeURIComponent(u[i].substr(7));
+              if (l.substr(0,12) == 'publication:') {
+                l = l.replace('publication:','Publication Date: ');
+              } else if (l.substr(0,7) == 'filing:') {
+                l = l.replace('filing:','Filing Date: ');
+              } else {
+                l = 'Priority Date: ' + l;
+              }
+              s += '<dd>' + l + '</dd>';
+            } else if (u[i].substr(0,6) == 'after=') {
+              s += '<dt>After</dt>';
+              l = decodeURIComponent(u[i].substr(6));
+              if (l.substr(0,12) == 'publication:') {
+                l = l.replace('publication:','Publication Date: ');
+              } else if (l.substr(0,7) == 'filing:') {
+                l = l.replace('filing:','Filing Date: ');
+              } else {
+                l = 'Priority Date: ' + l;
+              }
+              s += '<dd>' + l + '</dd>';
             }
           }
           s += '</dl>';
