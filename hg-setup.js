@@ -88,36 +88,45 @@ function renderHistoryTable(divName, website, historyData) {
 function makeHistoryItemProcessor(divName, website, queryExtractionF, shortQueryThreshold) {
   return function historyItemProcessor(historyItems) {
 
-    for (var i = historyItems.length - 1; i > 0; --i) {
-      var d = historyItems[i-1].lastVisitTime - historyItems[i].lastVisitTime;
-      if (d < shortQueryThreshold) {
-        // ignore queries that were viewed for less than shortQueryThreshold milliseconds
-        historyItems.splice(i,1);
+    var tableEntries = [];
+    var keptHistoryItems = [];
+    if (historyItems.length > 0) {
+      var queries = {}
+      for (var i = 0; i < historyItems.length; ++i) {
+        var e = {
+          'website': website,
+          'url': historyItems[i].url,
+          'query': queryExtractionF(historyItems[i]),
+          'lastvisit': historyItems[i].lastVisitTime,
+          'timestamp': (new Date(historyItems[i].lastVisitTime)).toLocaleString(),
+          'id': historyItems[i].id
+        };
+        e['timestamp'] = e['timestamp'].replace(/[, ]+/g, '&nbsp;');
+        if (e['query']) {
+          // filter out duplicate queries; Chrome creates different history entries 
+          // when the user goes to the 2nd, 3rd, etc. page of search results, because
+          // these have unique URLs.  However, for the purposes of a prior art search
+          // history, it's all just one query.
+          if (!(e['query'] in queries)) {
+            keptHistoryItems.push(e);
+            queries[e['query']] = true;
+          }
+        }
       }
     }
 
-    var tableEntries = [];
-    var queries = {}
-    for (var i = 0; i < historyItems.length; ++i) {
-      var e = {
-        'website': website,
-        'url': historyItems[i].url,
-        'query': queryExtractionF(historyItems[i]),
-        'lastvisit': historyItems[i].lastVisitTime,
-        'timestamp': (new Date(historyItems[i].lastVisitTime)).toLocaleString(),
-        'id': historyItems[i].id
-      };
-      e['timestamp'] = e['timestamp'].replace(/[, ]+/g, '&nbsp;');
-      if (e['query']) {
-        // filter out duplicate queries; Chrome creates different history entries 
-        // when the user goes to the 2nd, 3rd, etc. page of search results, because
-        // these have unique URLs.  However, for the purposes of a prior art search
-        // history, it's all just one query.
-        if (!(e['query'] in queries)) {
-          tableEntries.push(e);
-          queries[e['query']] = true;
+    if (keptHistoryItems.length > 0) {
+      tableEntries.push(keptHistoryItems[0]);
+
+      // keep only the queries that were viewed for longer than shortQueryThreshold milliseconds
+      for (var i = 1; i < keptHistoryItems.length; ++i) {
+        var d = keptHistoryItems[i-1].lastvisit - keptHistoryItems[i].lastvisit;
+        console.log(i, keptHistoryItems[i].lastvisit, d);
+        if (d > shortQueryThreshold) {
+          tableEntries.push(keptHistoryItems[i]);
         }
       }
+
     }
     renderHistoryTable(divName, website, tableEntries);
   };
