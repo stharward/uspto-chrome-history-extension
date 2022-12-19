@@ -148,7 +148,42 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
     },
     {'website':'Google Scholar',
       'matchpattern':'scholar.google.com',
-      'queryextractor':function(h) { return h.title.slice(0,-17); }
+      'queryextractor':function(h) {
+        if (h.title.slice(0,-14) == 'Google Scholar') {
+          return h.title.slice(0,-17);
+        } else {
+          console.log(h);
+          u = h.url.split('?')[1];
+          isActuallyAQuery = false;
+          if (u) {
+            u = u.split('&');
+            s = '';
+            for (var i = 0; i < u.length; i++) {
+              if (u[i].substr(0,2) == 'q=') {
+                if (u[i].substr(0,9) != 'q=related') {
+                  isActuallyAQuery = true;
+                  s += decodeURIComponent(u[i].substr(2)).replace(/\+/g,' ') + ' ';
+                }
+              } else if (u[i].substr(0,6) == 'as_yhi') {
+                y = u[i].substr(7);
+                if (y) {
+                  s += '[before:' + y + '] ';
+                }
+              } else if (u[i].substr(0,6) == 'as_ylo') {
+                y = u[i].substr(7);
+                if (y) {
+                  s += '[after:' + y + '] ';
+                }
+              }
+            }
+            if (isActuallyAQuery) {
+              return s;
+            }
+          } else {
+            return;
+          }
+        }
+      }
     },
     {'website':'Google Patents (old)',
       'matchpattern':'tbm=pts',
