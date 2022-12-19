@@ -92,23 +92,22 @@ function makeHistoryItemProcessor(divName, website, queryExtractionF, shortQuery
     var keptHistoryItems = [];
     if (historyItems.length > 0) {
       var queries = {}
-      for (var i = 0; i < historyItems.length; ++i) {
+      for (var i = historyItems.length - 1; i >= 0; --i) {
         var e = {
           'website': website,
           'url': historyItems[i].url,
           'query': queryExtractionF(historyItems[i]),
           'lastvisit': historyItems[i].lastVisitTime,
-          'timestamp': (new Date(historyItems[i].lastVisitTime)).toLocaleString(),
+          'timestamp': (new Date(historyItems[i].lastVisitTime)).toLocaleString().replace(/[, ]+/g, '&nbsp;'),
           'id': historyItems[i].id
         };
-        e['timestamp'] = e['timestamp'].replace(/[, ]+/g, '&nbsp;');
         if (e['query']) {
           // filter out duplicate queries; Chrome creates different history entries 
           // when the user goes to the 2nd, 3rd, etc. page of search results, because
           // these have unique URLs.  However, for the purposes of a prior art search
           // history, it's all just one query.
           if (!(e['query'] in queries)) {
-            keptHistoryItems.push(e);
+            keptHistoryItems.unshift(e);
             queries[e['query']] = true;
           }
         }
