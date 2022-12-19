@@ -82,8 +82,18 @@ function regenSelectionList() {
   buildAvailableHistoryList("availableHistoryList_div", ct, sq);
 }
 
+function toggleAboutSection() {
+  var s = document.getElementById('about_div');
+  if (s.style.display === "none") {
+    s.style.display = "block";
+  } else {
+    s.style.display = "none";
+  }
+}
+
 window.onload = function() {
   document.getElementById('generateHistoryPageButton').onclick = generateHistoryPage;
   document.getElementById('cutoffSelector').onchange = regenSelectionList;
   document.getElementById('shortQuerySelector').onchange = regenSelectionList;
+  document.getElementById('aboutHeader').onclick = toggleAboutSection;
 }

@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <!--
-Written by Soren Harward <soren.harward@uspto.gov>, May 2015
+Written by Soren Harward <soren.harward@uspto.gov>, 2015-2020
 
 This software was made by an employee of the United States Government as part
 of his official duties. As such, it is not subject to copyright in the United
@@ -69,96 +69,117 @@ OR OTHER DEALINGS IN THE SOFTWARE.
       <hr />
       <div style="width: 48%; float: left;">
         <h1>Instructions</h1>
-        <p>This extension allows you to create a &ldquo;printable&rdquo; web search history
-        that can be converted to PDF and placed into e-Red Folder. Once the history is
-        in eRF, you can import it into an Office action with OC so that it gets added
-        to the action file set.</p>
+        <p>The Google Search History Generator is a tool used for selecting and
+        saving search queries as a PDF file, to be imported into an OC Set.  A
+        full QRG on installation and use of this tool can be found on the <a
+        target="_blank" href="http://ptoweb.uspto.gov/patents/pe2e/training/oc/">PE2E
+        OC Training and Reference Page</a>.</p>
         <h2>Creating the &ldquo;Printable&rdquo; Search History</h2>
         <ol>
-          <li>In the list above, check the searches that you want to be shown on the
-          search history listing that goes into IFW.</li>
-          <li>Click the &ldquo;Generate Printable Search History&rdquo; button.  The
-          checked entries will appear on the printable page.</li>
+          <li>In the list above, click in the Show entries from past field and
+          select an appropriate timeframe from the expanded menu.</li>
+          <li>Click the checkboxes next to search strings that should appear on
+          the resulting search history.</li>
+          <li>Click the <b>Generate Printable Search History</b> button. A Print
+          window displays. Click the Destination field, select Save as PDF, and
+          click the Save button.</li>
           <li>If you need to generate multiple separate search history listings
-          (<i>e.g.</i> you have searches for two applications mixed together), generate
-          one, then reload this page, and generate the second one.</li>
+          (<i>e.g.</i> you have searches for two applications mixed together),
+          generate one, then reload this page, and generate the second one.</li>
         </ol>
         <h2>Putting the Search History in e-Red Folder and OC action</h2>
         <ol>
-          <li>When the printable search history is generated and the &ldquo;Print&rdquo;
-          dialog comes up, select &ldquo;Save as PDF&rdquo; as the desination.</li>
-          <li>Save the PDF into the e-Red Folder for the application.</li>
-          <li>In OC, import the PDF from eRF, and use the <tt><b>SRNT</b></tt>
-          Doc Code.</li>
+          <li>In OC, click the Import File(s) button in the toolbar. An Import
+          Files window opens.</li>
+          <li>If the Search History is saved in an e-Red Folder for the
+          application, the file will be listed in the Import Files window; or
+          navigate to the location of the saved search history file. Drag the
+          PDF file to the &ldquo;Drag and drop files here&rdquo; portion of
+          the Import File(s) window. The file will then be listed.</li>
+          <li>Click to check the selection box next to the Search History
+          file in the list.</li>
+          <li>If not automatically populated, click the Doc Code field and
+          select SRNT from the expanded list.</li>
+          <li>Click the Import button and verify the file appears in the
+          document list and was properly imported.</li>
         </ol>
       </div>
       <div style="margin-left: 52%;">
-        <h2>About this Extension</h2>
-        <p>This extension was written by <a href="mailto:soren.harward@uspto.gov">Soren
-        Harward</a>, an examiner in AU1631.  Please send bug reports and feature
-        requests (like new websites to support) to him. Don&rsquo;t contact the OCIO
-        Helpdesk. Since OCIO didn&rsquo;t develop this software, they&rsquo;ll
-        have no idea what you&rsquo;re talking about.</p>
-        <h3>Currently Supported Websites</h3>
-        <ul>
-          <li>Google Books</li>
-          <li>Google Images</li>
-          <li>Google Patents</li>
-          <li>Google Scholar</li>
-          <li>Google Web</li>
-        </ul>
-        <h3>Version History and ChangeLog</h3>
-        <h4>Version 5.2 (16 Apr 2020)</h4>
-        <ul>
-          <li>This extension now has official OCIO approval!</li>
-          <li>Support Google Web searches.</li>
-          <li>Removed support for old, discontinued Google Patents search interface.</li>
-          <li>Updated documentation for OC.</li>
-        </ul>
-        <h4>Version 5.1 (18 Oct 2017)</h4>
-        <ul>
-          <li>Query processor update to handle Google tweaking the format of
-            the Patents search URL.</li>
-        </ul>
-        <h4>Version 5 (27 Sep 2017)</h4>
-        <ul>
-          <li>Google launched a new version of Scholar, necessitating a rewrite
-            of the query parameter extraction function.</li>
-        </ul>
-        <h4>Version 4 (1 Mar 2017)</h4>
-        <ul>
-          <li>When eliminating duplicates of a query, keep the first instance
-            of the query, rather than the last.</li>
-        </ul>
-        <h4>Version 3 (28 Feb 2017)</h4>
-        <ul>
-          <li>Added a function to filter out queries that were executed, but
-            weren&rsquo;t displayed long enough to be reviewed. For example, if
-            you realized that you misspelled a search term, and immediately ran
-            a new query with the new term, you can filter out the old query.
-            This is particularly useful when building a complicated query in
-            Google Patents, because Chrome runs a new query each time you enter
-            a new search term, and you probably don&rsquo;t care about keeping
-            all the intermediate queries that were run while you were building
-            up the whole query.</li>
-          <li>Parse more fields from the Google Patents search.</li>
-          <li>Format the output of Google Patents searches a little differently
-            to make it easier to understand the structure of queries that used
-            proximity or boolean operators.</li>
-          <li>Ignore spurious entries in the Google Patents list caused when
-            the URL of a publication also includes the query that yielded the
-            publication.</li>
-        </ul>
-        <h4>Version 2 (1 Oct 2015)</h4>
-        <ul>
-          <li>Updated to handle the July 2015 overhaul of the Google Patents interface.
-          The old interface is still around, so this extension still handles it for
-          now.</li>
-        </ul>
-        <h4>Version 1 (29 May 2015)</h4>
-        <ul>
-          <li>Initial release.  Supports Google Books, Images, Patents and Scholar.</li>
-        </ul>
+        <h1>Getting Further Help</h1>
+        <p>Users can direct questions about PE2E-OC or this extension to the
+        ITRP Team. For any problems importing the Search History into an OC
+        set, please submit a PASM ticket to the PE2E Official Correspondence
+        (OC) team.</p>
+        <p id="aboutHeader" style="text-decoration: underline;">About this Extension</p>
+        <div style="display:none;" id="about_div">
+          <h3>Currently Supported Websites</h3>
+          <ul>
+            <li>Google Books</li>
+            <li>Google Images</li>
+            <li>Google Patents</li>
+            <li>Google Scholar</li>
+            <li>Google Web</li>
+          </ul>
+          <h3>Version History and ChangeLog</h3>
+          <h4>Version 5.3 (22 Jul 2020)</h4>
+          <ul>
+            <li>Reinstated handler for old Google Patents search interface.</li>
+            <li>Updated documentation for OC.</li>
+          </ul>
+          <h4>Version 5.2 (16 Apr 2020)</h4>
+          <ul>
+            <li>This extension now has official OCIO approval!</li>
+            <li>Support Google Web searches.</li>
+            <li>Removed support for old, discontinued Google Patents search interface.</li>
+            <li>Updated documentation for OC.</li>
+          </ul>
+          <h4>Version 5.1 (18 Oct 2017)</h4>
+          <ul>
+            <li>Query processor update to handle Google tweaking the format of
+              the Patents search URL.</li>
+          </ul>
+          <h4>Version 5 (27 Sep 2017)</h4>
+          <ul>
+            <li>Google launched a new version of Scholar, necessitating a rewrite
+              of the query parameter extraction function.</li>
+          </ul>
+          <h4>Version 4 (1 Mar 2017)</h4>
+          <ul>
+            <li>When eliminating duplicates of a query, keep the first instance
+              of the query, rather than the last.</li>
+          </ul>
+          <h4>Version 3 (28 Feb 2017)</h4>
+          <ul>
+            <li>Added a function to filter out queries that were executed, but
+              weren&rsquo;t displayed long enough to be reviewed. For example, if
+              you realized that you misspelled a search term, and immediately ran
+              a new query with the new term, you can filter out the old query.
+              This is particularly useful when building a complicated query in
+              Google Patents, because Chrome runs a new query each time you enter
+              a new search term, and you probably don&rsquo;t care about keeping
+              all the intermediate queries that were run while you were building
+              up the whole query.</li>
+            <li>Parse more fields from the Google Patents search.</li>
+            <li>Format the output of Google Patents searches a little differently
+              to make it easier to understand the structure of queries that used
+              proximity or boolean operators.</li>
+            <li>Ignore spurious entries in the Google Patents list caused when
+              the URL of a publication also includes the query that yielded the
+              publication.</li>
+          </ul>
+          <h4>Version 2 (1 Oct 2015)</h4>
+          <ul>
+            <li>Updated to handle the July 2015 overhaul of the Google Patents interface.
+            The old interface is still around, so this extension still handles it for
+            now.</li>
+          </ul>
+          <h4>Version 1 (29 May 2015)</h4>
+          <ul>
+            <li>Initial release.  Supports Google Books, Images, Patents and Scholar.</li>
+          </ul>
+          <h3>Author Info</h3>
+          <p>This extension was written by Soren Harward, a patent examiner in AU1631.</p>
+        </div>
       </div>
     </div>
     <div id="printable_div" />
