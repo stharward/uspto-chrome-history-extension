@@ -1,0 +1,30 @@
+table.printable {
+  font-size: 11pt;
+  border-collapse: collapse;
+}
+
+table.printable thead {
+  font-size: 130%;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+table.printable td {
+  page-break-inside: avoid;
+  padding: 5pt 8pt;
+}
+
+table.printable tbody tr {
+  border: thin solid black;
+}
+
+/*
+table.printable tr:nth-child(even) {
+  background: #eee;
+}
+*/
+
+td.website {
+  padding-left: 14pt;
+  padding-right: 14pt;
+}
