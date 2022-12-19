@@ -252,6 +252,10 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
         }
         return s;
       }
+    },
+    {'website':'Google',
+      'matchpattern':'google.com/search?q=',
+      'queryextractor':function(h) { return h.title.slice(0,-15); }
     }
   ]
 
