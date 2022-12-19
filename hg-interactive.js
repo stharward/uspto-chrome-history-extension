@@ -45,6 +45,13 @@ function generateHistoryPage() {
   window.print();
 }
 
+function regenSelectionList() {
+  var s = document.getElementById('cutoffSelector');
+  ct = s.options[s.selectedIndex].value;
+  buildAvailableHistoryList("availableHistoryList_div", ct);
+}
+
 window.onload = function() {
   document.getElementById('generateHistoryPageButton').onclick = generateHistoryPage;
+  document.getElementById('cutoffSelector').onchange = regenSelectionList;
 }

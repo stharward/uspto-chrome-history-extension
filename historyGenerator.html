@@ -10,6 +10,16 @@
   <body>
     <div id="selection_div">
       <h1>Select History Entries to be Printed</h1>
+      Show entries from past
+      <select id="cutoffSelector">
+        <option value="3600">1 hour</option>
+        <option value="10800">3 hours</option>
+        <option value="28800">8 hours</option>
+        <option value="86400" selected="true">1 day</option>
+        <option value="345600">4 days</option>
+        <option value="604800">1 week</option>
+        <option value="2419200">4 weeks</option>
+      </select>
       <form id="historyEntriesForm">
         <div id="availableHistoryList_div"></div>
       </form>
@@ -22,9 +32,10 @@
       <div style="width: 48%; float: left;">
         <h1>Instructions</h1>
         <p>This extension allows you to create a &ldquo;printable&rdquo; web search history
-        that can be converted to PDF and placed into e-Red Folder so that it gets added
-        to IFW with an Office action.</p>
-        <h2>Creating the &ldquo;Printable&rdquo; History</h2>
+        that can be converted to PDF and placed into e-Red Folder. Once the history is
+        in eRF, you can import it into an Office action with OACS so that it gets added
+        to IFW.</p>
+        <h2>Creating the &ldquo;Printable&rdquo; Search History</h2>
         <ol>
           <li>In the list above, uncheck the searches that you do not want to be shown on
           the search history listing that goes into IFW (<i>e.g.</i> mistakes, or searches

@@ -10,6 +10,7 @@ function renderHistoryTable(divName, website, historyData) {
   var d = document.getElementById(divName);
 
   var t = document.createElement('table');
+  t.className = 'selectable';
   var h = t.createTHead();
   var hr = h.insertRow(0);
   var hc = hr.insertCell(0);
@@ -18,11 +19,13 @@ function renderHistoryTable(divName, website, historyData) {
   hcb.checked = true;
   hc.appendChild(hcb);
   hc = hr.insertCell(1);
+  hc.colSpan = 2;
   hc.textContent = "searches on " + website;
 
   childcbs = [];
+  var tBody = document.createElement('tbody');
   for (var i = 0; i < historyData.length; ++i) {
-    var r = t.insertRow(i+1);
+    var r = tBody.insertRow(i);
     var tc = r.insertCell(0);
     tc.textContent = "";
     var cb = document.createElement('input');
@@ -33,11 +36,12 @@ function renderHistoryTable(divName, website, historyData) {
     childcbs.push(cb);
     tc.appendChild(cb);
     tc = r.insertCell(1);
-    tc.textContent = historyData[i]['query'];
-    tc = r.insertCell(2);
     tc.textContent = historyData[i]['timestamp']
+    tc = r.insertCell(2);
+    tc.textContent = historyData[i]['query'];
   }
   hcb.onchange = makeCheckBoxToggler(hcb,childcbs);
+  t.appendChild(tBody);
   d.appendChild(t);
   d.appendChild( document.createElement('hr') );
 }
@@ -63,9 +67,8 @@ function makeHistoryItemProcessor(divName, website, queryExtractionF) {
   };
 }
 
-function buildAvailableHistoryList(divName) {
-  // TODO: make this configurable
-  var cutoffTime = (new Date).getTime() - (1000 * 60 * 60 * 24 * 90);
+function buildAvailableHistoryList(divName, cutoff) {
+  var cutoffTime = (new Date).getTime() - (1000 * cutoff);
 
   // clear the existing entries
   document.getElementById(divName).textContent = '';
@@ -101,5 +104,5 @@ function buildAvailableHistoryList(divName) {
 }
 
 document.addEventListener('DOMContentLoaded',
-  function() { buildAvailableHistoryList("availableHistoryList_div"); }
+  function() { buildAvailableHistoryList("availableHistoryList_div", 86400); }
 );
