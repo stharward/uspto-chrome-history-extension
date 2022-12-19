@@ -1,10 +1,10 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
 
   "name": "Search History Generator",
   "description": "Generate a search history for supported websites that can easily be 'printed' into e-Red Folder",
-  "version": "5.3",
-  "browser_action": {
+  "version": "5.4",
+  "action": {
     "default_icon": "icon64.png"
   },
   "icons": { "16": "icon16.png",
@@ -14,7 +14,6 @@
             "128": "icon128.png" },
   "permissions": [ "history" ],
   "background": {
-    "scripts": ["background.js"],
-    "persistent": false
+    "service_worker": "background.js"
   }
 }
