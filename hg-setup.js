@@ -17,7 +17,7 @@ function renderHistoryTable(divName, website, historyData) {
   var hc = hr.insertCell(0);
   var hcb = document.createElement('input');
   hcb.type = 'checkbox';
-  hcb.checked = true;
+  hcb.checked = false;
   hc.appendChild(hcb);
   hc = hr.insertCell(1);
   hc.colSpan = 2;
@@ -41,7 +41,7 @@ function renderHistoryTable(divName, website, historyData) {
     cb.type = 'checkbox';
     cb.className = 'historyentry';
     cb.value = JSON.stringify(historyData[i]);
-    cb.checked = true;
+    cb.checked = false;
     childcbs.push(cb);
     tc.appendChild(cb);
     tc.style.borderTop = brd;
