@@ -262,8 +262,9 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
   for (var i = 0; i < websites.length; i++) {
     w = websites[i];
     chrome.history.search({
+        'maxResults': 1000,       // defaults to 100, but some examiners have many more
         'startTime': cutoffTime,  // starting with the specified cutoff time ...
-        'text': w['matchpattern'] // ... return all results from the website
+        'text': w['matchpattern'] // ... return results from the website
       },
       makeHistoryItemProcessor(divName, w['website'], w['queryextractor'], shortQueryThreshold) // this is a closure
     );
