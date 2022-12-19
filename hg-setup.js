@@ -209,6 +209,14 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
             } else if (u[i].substr(0,9) == 'inventor=') {
               s += '<dt>Inventor(s)</dt>';
               s += '<dd>[' + decodeURIComponent(u[i].substr(9).replace(/\+/g,' ').replace(/,/g,'] OR [')) + ']</dd>';
+            // parse assignee(s)
+            } else if (u[i].substr(0,9) == 'assignee=') {
+              s += '<dt>Assignee(s)</dt>';
+              s += '<dd>[' + decodeURIComponent(u[i].substr(9).replace(/\+/g,' ').replace(/,/g,'] OR [')) + ']</dd>';
+            // parse country(ies)
+            } else if (u[i].substr(0,8) == 'country=') {
+              s += '<dt>Patent Office(s)</dt>';
+              s += '<dd>[' + decodeURIComponent(u[i].substr(8).replace(/\+/g,' ').replace(/,/g,'] OR [')) + ']</dd>';
             // parse CPC
             } else if (u[i].substr(0,4) == 'cpc=') {
               s += '<dt>CPC</dt>';
