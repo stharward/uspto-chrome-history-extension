@@ -58,12 +58,12 @@ function generateHistoryPage() {
   for (var i = 0; i < entries.length; ++i) {
     r = tBody.insertRow(i);
     tc = r.insertCell(0);
-    tc.textContent = entries[i]['timestamp'];
+    tc.innerHTML = entries[i]['timestamp'];
     tc = r.insertCell(1);
     tc.className += 'website';
     tc.textContent = entries[i]['website'];
     tc = r.insertCell(2);
-    tc.textContent = entries[i]['query'];
+    tc.innerHTML = entries[i]['query'];
   }
   t.appendChild(tBody);
   document.getElementById('printable_div').appendChild(t);

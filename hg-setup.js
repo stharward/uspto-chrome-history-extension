@@ -62,8 +62,6 @@ function renderHistoryTable(divName, website, historyData) {
     var brd = ((lastvisit - historyData[i]['lastvisit']) > 3600000) ? 'thin solid #009' : 'none';
     lastvisit = historyData[i]['lastvisit'];
 
-    console.log("border is", brd);
-
     var r = tBody.insertRow(i);
     var tc = r.insertCell(0);
     var cb = document.createElement('input');
@@ -75,10 +73,10 @@ function renderHistoryTable(divName, website, historyData) {
     tc.appendChild(cb);
     tc.style.borderTop = brd;
     tc = r.insertCell(1);
-    tc.textContent = historyData[i]['timestamp'];
+    tc.innerHTML = historyData[i]['timestamp'];
     tc.style.borderTop = brd;
     tc = r.insertCell(2);
-    tc.textContent = historyData[i]['query'];
+    tc.innerHTML = historyData[i]['query'];
     tc.style.borderTop = brd;
   }
   hcb.onchange = makeCheckBoxToggler(hcb,childcbs);
@@ -100,6 +98,7 @@ function makeHistoryItemProcessor(divName, website, queryExtractionF) {
         'timestamp': (new Date(historyItems[i].lastVisitTime)).toLocaleString(),
         'id': historyItems[i].id
       };
+      e['timestamp'] = e['timestamp'].replace(/[, ]+/g, '&nbsp;');
       if (e['query']) {
         // filter out duplicate queries; Chrome creates different history entries 
         // when the user goes to the 2nd, 3rd, etc. page of search results, because
@@ -134,9 +133,34 @@ function buildAvailableHistoryList(divName, cutoff) {
       'matchpattern':'scholar.google.com',
       'queryextractor':function(h) { return h.title.slice(0,-17); }
     },
-    {'website':'Google Patents',
+    {'website':'Google Patents (old)',
       'matchpattern':'tbm=pts',
       'queryextractor':function(h) { return h.title.slice(0,-16); }
+    },
+    {'website':'Google Patents',
+      'matchpattern':'patents.google.com',
+      'queryextractor':function(h) {
+        console.log(h.url);
+        if (h.url.indexOf('?') >= 0) {
+          u = h.url.split('?')[1];
+          u = u.split('&');
+          s = '<dl>';
+          tc = 0;
+          for (var i = 0; i < u.length; i++) {
+            if (u[i].substr(0,2) == 'q=') {
+              s += '<dt>Keyword ' + (++tc).toString() + '</dt>';
+              s += '<dd>' + decodeURIComponent(u[i].substr(2).replace(/\+/g,' ').replace(/,/g,' OR ')) + '</dd>';
+            } else if (u[i].substr(0,4) == 'cpc=') {
+              s += '<dt>CPC</dt>';
+              s += '<dd>' + decodeURIComponent(u[i].substr(4)) + '</dd>';
+            }
+          }
+          s += '</dl>';
+        } else {
+          s = '';
+        }
+        return s;
+      }
     }
   ]
 
