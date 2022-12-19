@@ -1,5 +1,3 @@
-/* SET UP OF THE PAGE */
-
 function renderHistoryTable(divName, historyData) {
   //TODO: make the table look nicer
   var t = document.createElement('table');
@@ -43,9 +41,6 @@ function makeHistoryItemProcessor(divName) {
 }
 
 function buildAvailableHistoryList(divName) {
-  /* have to do this after the base HTML is totally loaded */
-  document.getElementById('generateHistoryPageButton').onclick = generateHistoryPage;
-
   // TODO: make this configurable
   var cutoffTime = (new Date).getTime() - (1000 * 60 * 60 * 24 * 90)
 
@@ -67,19 +62,3 @@ function buildAvailableHistoryList(divName) {
 document.addEventListener('DOMContentLoaded',
   function() { buildAvailableHistoryList("availableHistoryList_div"); }
 );
-
-/* INTERACTIVE FUNCTIONALITY OF THE PAGE */
-
-function generateHistoryPage() {
-  var message = [];
-  f = document.getElementById('historyEntriesForm').getElementsByTagName('input');
-  for (i = 0; i < f.length; i++) {
-    if (f[i].checked) {
-      message.push(JSON.parse(f[i].value));
-    }
-  }
-  console.log("sending message", message, "with entries for printing");
-  //FIXME: pass the message to the background form for rendering
-}
-
-//TODO: check or uncheck all entries in a table
