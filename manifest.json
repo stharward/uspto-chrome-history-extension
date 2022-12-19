@@ -32,13 +32,15 @@ OR OTHER DEALINGS IN THE SOFTWARE.
   "name": "Search History Generator",
   "description": "Generate a search history for supported websites that can easily be 'printed' into e-Red Folder",
   "version": "1",
-
   "browser_action": {
-    "default_icon": "clock.png" // TODO: draw a new icon
+    "default_icon": "icon64.png"
   },
-  "permissions": [
-    "history"
-  ],
+  "icons": { "16": "icon16.png",
+             "32": "icon32.png",
+             "48": "icon48.png",
+             "64": "icon64.png",
+            "128": "icon128.png" },
+  "permissions": [ "history" ],
   "background": {
     "scripts": ["background.js"],
     "persistent": false
