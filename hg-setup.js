@@ -1,29 +1,43 @@
+function makeCheckBoxToggler(mastercb, cblist) {
+  return function() {
+    for (var i=0; i<cblist.length; i++) {
+      cblist[i].checked = mastercb.checked;
+    }
+  }
+}
+
 function renderHistoryTable(divName, website, historyData) {
-  d = document.getElementById(divName);
+  var d = document.getElementById(divName);
 
   var t = document.createElement('table');
-  h = t.createTHead();
-  hr = h.insertRow(0);
-  hc = hr.insertCell(0);
-  //TODO: have a checkbox that allows checking/unchecking of all entries
-  hc.textContent = '';
+  var h = t.createTHead();
+  var hr = h.insertRow(0);
+  var hc = hr.insertCell(0);
+  var hcb = document.createElement('input');
+  hcb.type = 'checkbox';
+  hcb.checked = true;
+  hc.appendChild(hcb);
   hc = hr.insertCell(1);
   hc.textContent = "searches on " + website;
 
+  childcbs = [];
   for (var i = 0; i < historyData.length; ++i) {
-    r = t.insertRow(i+1);
-    tc = r.insertCell(0);
+    var r = t.insertRow(i+1);
+    var tc = r.insertCell(0);
     tc.textContent = "";
-    cb = document.createElement('input');
+    var cb = document.createElement('input');
     cb.type = 'checkbox';
+    cb.className = 'historyentry';
     cb.value = JSON.stringify(historyData[i]);
     cb.checked = true;
+    childcbs.push(cb);
     tc.appendChild(cb);
     tc = r.insertCell(1);
     tc.textContent = historyData[i]['query'];
     tc = r.insertCell(2);
     tc.textContent = historyData[i]['timestamp']
   }
+  hcb.onchange = makeCheckBoxToggler(hcb,childcbs);
   d.appendChild(t);
   d.appendChild( document.createElement('hr') );
 }
@@ -56,7 +70,7 @@ function buildAvailableHistoryList(divName) {
   // clear the existing entries
   document.getElementById(divName).textContent = '';
 
-  websites = [
+  var websites = [
     {'website':'Google Books',
       'matchpattern':'tbm=bks',
       'queryextractor':function(h) { return h.title.slice(0,-15); }

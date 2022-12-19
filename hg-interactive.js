@@ -1,5 +1,5 @@
 function generateHistoryPage() {
-  f = document.getElementById('historyEntriesForm').getElementsByTagName('input');
+  f = document.forms['historyEntriesForm'].querySelectorAll('input.historyentry');
   var entries = []
   for (i = 0; i < f.length; i++) {
     if (f[i].checked) {
