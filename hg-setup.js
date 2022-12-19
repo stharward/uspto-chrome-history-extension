@@ -149,7 +149,7 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
     {'website':'Google Patents',
       'matchpattern':'patents.google.com',
       'queryextractor':function(h) {
-        if (h.url.indexOf('?') >= 0) {
+        if ((h.url.indexOf('?') >= 0) && (h.url.substr(0,30) == 'https://patents.google.com/?q=')) {
           u = h.url.split('?')[1];
           u = u.split('&');
           s = '<dl>';
