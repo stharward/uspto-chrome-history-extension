@@ -47,6 +47,16 @@ OR OTHER DEALINGS IN THE SOFTWARE.
         <option value="345600">4 days</option>
         <option value="604800">1 week</option>
         <option value="2419200">4 weeks</option>
+      </select><br />
+      Ignore entries viewed for less than
+      <select id="shortQuerySelector">
+        <option value="0" selected="true">0 seconds</option>
+        <option value="1000">1 second</option>
+        <option value="10000">10 seconds</option>
+        <option value="30000">30 seconds</option>
+        <option value="60000">1 minute</option>
+        <option value="120000">2 minutes</option>
+        <option value="300000">5 minutes</option>
       </select>
       <form id="historyEntriesForm">
         <div id="availableHistoryList_div"></div>
@@ -97,6 +107,18 @@ OR OTHER DEALINGS IN THE SOFTWARE.
           <li>Google Scholar</li>
         </ul>
         <h3>Version History and ChangeLog</h3>
+        <h4>Version 3 (28 Feb 2017)</h4>
+        <ul>
+          <li>Added a function to filter out queries that were executed, but
+            weren&rsquo;t displayed long enough to be reviewed. For example, if
+            you realized that you misspelled a search term, and immediately ran
+            a new query with the new term, you can filter out the old query.
+            This is particularly useful when building a complicated query in
+            Google Patents, because Chrome runs a new query each time you enter
+            a new search term, and you probably don&rsquo;t care about keeping
+            all the intermediate queries that were run while you were building
+            up the whole query.</li>
+        </ul>
         <h4>Version 2 (1 Oct 2015)</h4>
         <ul>
           <li>Updated to handle the July 2015 overhaul of the Google Patents interface.

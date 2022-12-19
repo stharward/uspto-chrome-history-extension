@@ -85,8 +85,17 @@ function renderHistoryTable(divName, website, historyData) {
   d.appendChild( document.createElement('hr') );
 }
 
-function makeHistoryItemProcessor(divName, website, queryExtractionF) {
+function makeHistoryItemProcessor(divName, website, queryExtractionF, shortQueryThreshold) {
   return function historyItemProcessor(historyItems) {
+
+    for (var i = historyItems.length - 1; i > 0; --i) {
+      var d = historyItems[i-1].lastVisitTime - historyItems[i].lastVisitTime;
+      if (d < shortQueryThreshold) {
+        // ignore queries that were viewed for less than shortQueryThreshold milliseconds
+        historyItems.splice(i,1);
+      }
+    }
+
     var tableEntries = [];
     var queries = {}
     for (var i = 0; i < historyItems.length; ++i) {
@@ -114,7 +123,7 @@ function makeHistoryItemProcessor(divName, website, queryExtractionF) {
   };
 }
 
-function buildAvailableHistoryList(divName, cutoff) {
+function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
   var cutoffTime = (new Date).getTime() - (1000 * cutoff);
 
   // clear the existing entries
@@ -140,7 +149,6 @@ function buildAvailableHistoryList(divName, cutoff) {
     {'website':'Google Patents',
       'matchpattern':'patents.google.com',
       'queryextractor':function(h) {
-        console.log(h.url);
         if (h.url.indexOf('?') >= 0) {
           u = h.url.split('?')[1];
           u = u.split('&');
@@ -170,11 +178,11 @@ function buildAvailableHistoryList(divName, cutoff) {
         'startTime': cutoffTime,  // starting with the specified cutoff time ...
         'text': w['matchpattern'] // ... return all results from the website
       },
-      makeHistoryItemProcessor(divName, w['website'], w['queryextractor']) // this is a closure
+      makeHistoryItemProcessor(divName, w['website'], w['queryextractor'], shortQueryThreshold) // this is a closure
     );
   }
 }
 
 document.addEventListener('DOMContentLoaded',
-  function() { buildAvailableHistoryList("availableHistoryList_div", 86400); }
+  function() { buildAvailableHistoryList("availableHistoryList_div", 86400, 0); }
 );

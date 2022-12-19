@@ -77,10 +77,13 @@ function generateHistoryPage() {
 function regenSelectionList() {
   var s = document.getElementById('cutoffSelector');
   ct = s.options[s.selectedIndex].value;
-  buildAvailableHistoryList("availableHistoryList_div", ct);
+  var s = document.getElementById('shortQuerySelector');
+  sq = s.options[s.selectedIndex].value;
+  buildAvailableHistoryList("availableHistoryList_div", ct, sq);
 }
 
 window.onload = function() {
   document.getElementById('generateHistoryPageButton').onclick = generateHistoryPage;
   document.getElementById('cutoffSelector').onchange = regenSelectionList;
+  document.getElementById('shortQuerySelector').onchange = regenSelectionList;
 }
