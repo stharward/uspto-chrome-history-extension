@@ -1,5 +1,5 @@
 /*
-Written by Soren Harward <soren.harward@uspto.gov>, 2015-2021
+Written by Soren Harward <soren.harward@uspto.gov>, 2015-2023
 
 This software was made by an employee of the United States Government as part
 of his official duties. As such, it is not subject to copyright in the United
@@ -201,10 +201,10 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
           s = '<dl>';
           tc = 0;
           for (var i = 0; i < u.length; i++) {
-            // parse keywords
+            // parse search terms
             if (u[i].substr(0,2) == 'q=') {
-              s += '<dt>Keyword Group ' + (++tc).toString() + '</dt>';
-              s += '<dd>[' + decodeURIComponent(u[i].substr(2).replace(/\+/g,' ').replace(/,/g,'] OR [')) + ']</dd>';
+              s += '<dt>Search Term ' + (++tc).toString() + '</dt>';
+              s += '<dd>' + decodeURIComponent(u[i].substr(2).replace(/\+/g,' ')) + '</dd>';
             // parse inventor(s)
             } else if (u[i].substr(0,9) == 'inventor=') {
               s += '<dt>Inventor(s)</dt>';
@@ -217,10 +217,6 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
             } else if (u[i].substr(0,8) == 'country=') {
               s += '<dt>Patent Office(s)</dt>';
               s += '<dd>[' + decodeURIComponent(u[i].substr(8).replace(/\+/g,' ').replace(/,/g,'] OR [')) + ']</dd>';
-            // parse CPC
-            } else if (u[i].substr(0,4) == 'cpc=') {
-              s += '<dt>CPC</dt>';
-              s += '<dd>' + decodeURIComponent(u[i].substr(4)) + '</dd>';
             // parse dates
             } else if (u[i].substr(0,7) == 'before=') {
               s += '<dt>Before</dt>';
@@ -262,7 +258,7 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
   for (var i = 0; i < websites.length; i++) {
     w = websites[i];
     chrome.history.search({
-        'maxResults': 1000,       // defaults to 100, but some examiners have many more
+        'maxResults': 10000,      // defaults to 100, but some examiners have many more
         'startTime': cutoffTime,  // starting with the specified cutoff time ...
         'text': w['matchpattern'] // ... return results from the website
       },
@@ -272,5 +268,5 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
 }
 
 document.addEventListener('DOMContentLoaded',
-  function() { buildAvailableHistoryList("availableHistoryList_div", 86400, 0); }
+  function() { buildAvailableHistoryList("availableHistoryList_div", 86400, 1000); }
 );

@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <!--
-Written by Soren Harward <soren.harward@uspto.gov>, 2015-2021
+Written by Soren Harward <soren.harward@uspto.gov>, 2015-2023
 
 This software was made by an employee of the United States Government as part
 of his official duties. As such, it is not subject to copyright in the United
@@ -50,8 +50,8 @@ OR OTHER DEALINGS IN THE SOFTWARE.
       </select><br />
       Ignore entries viewed for less than
       <select id="shortQuerySelector">
-        <option value="0" selected="true">0 seconds</option>
-        <option value="1000">1 second</option>
+        <option value="0">0 seconds</option>
+        <option value="1000" selected="true">1 second</option>
         <option value="10000">10 seconds</option>
         <option value="30000">30 seconds</option>
         <option value="60000">1 minute</option>
@@ -121,6 +121,15 @@ OR OTHER DEALINGS IN THE SOFTWARE.
             <li>Google Web</li>
           </ul>
           <h3>Version History and ChangeLog</h3>
+          <h4>Version 6 (10 Feb 2023)</h4>
+          <ul>
+            <li>Changed the query parser to handle Google's updated Patents search
+              interface.</li>
+            <li>Set the &ldquo;ignore entries viewed for less than&rdquo; parameter to 
+              default to 1 second, because Google's updated Patents search interface
+              now makes a history entry for every single character typed into the search
+              terms box.</li>
+          </ul>
           <h4>Version 5.4 (13 Dec 2021)</h4>
           <ul>
             <li>Ported to <a href="https://developer.chrome.com/docs/extensions/mv3/intro/">Manifest V3</a></li>
