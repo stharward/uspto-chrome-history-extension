@@ -252,6 +252,10 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
     {'website':'Google',
       'matchpattern':'google.com/search?q=',
       'queryextractor':function(h) { return h.title.slice(0,-15); }
+    },
+    {'website':'IEEE Xplore',
+      'matchpattern':'ieeexplore.ieee.org/search/searchresult.jsp?',
+      'queryextractor':function(h) { return (new URLSearchParams(h.url)).get('queryText'); }
     }
   ]
 
