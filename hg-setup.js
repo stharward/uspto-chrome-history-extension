@@ -120,7 +120,7 @@ function makeHistoryItemProcessor(divName, website, queryExtractionF, shortQuery
       // keep only the queries that were viewed for longer than shortQueryThreshold milliseconds
       for (var i = 1; i < keptHistoryItems.length; ++i) {
         var d = keptHistoryItems[i-1].lastvisit - keptHistoryItems[i].lastvisit;
-        console.log(i, keptHistoryItems[i].lastvisit, d);
+        //console.log(i, keptHistoryItems[i].lastvisit, d);
         if (d > shortQueryThreshold) {
           tableEntries.push(keptHistoryItems[i]);
         }
@@ -210,62 +210,57 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
     {'website':'Google Patents',
       'matchpattern':'patents.google.com',
       'queryextractor':function(h) {
-        if ((h.url.indexOf('?') >= 0)
-          && ((h.url.substr(0,30) == 'https://patents.google.com/?q=') ||
-            (h.url.substr(0,38) == 'https://patents.google.com/advanced?q='))
-        ) {
-          /* FIXME: rewrite to use URL(h.url).searchParams */
-          u = h.url.split('?')[1];
-          u = u.split('&');
-          s = '<dl>';
-          tc = 0;
-          for (var i = 0; i < u.length; i++) {
-            // parse search terms
-            if (u[i].substr(0,2) == 'q=') {
-              s += '<dt>Search Term ' + (++tc).toString() + '</dt>';
-              s += '<dd>' + decodeURIComponent(u[i].substr(2).replace(/\+/g,' ')) + '</dd>';
-            // parse inventor(s)
-            } else if (u[i].substr(0,9) == 'inventor=') {
-              s += '<dt>Inventor(s)</dt>';
-              s += '<dd>[' + decodeURIComponent(u[i].substr(9).replace(/\+/g,' ').replace(/,/g,'] OR [')) + ']</dd>';
-            // parse assignee(s)
-            } else if (u[i].substr(0,9) == 'assignee=') {
-              s += '<dt>Assignee(s)</dt>';
-              s += '<dd>[' + decodeURIComponent(u[i].substr(9).replace(/\+/g,' ').replace(/,/g,'] OR [')) + ']</dd>';
-            // parse country(ies)
-            } else if (u[i].substr(0,8) == 'country=') {
-              s += '<dt>Patent Office(s)</dt>';
-              s += '<dd>[' + decodeURIComponent(u[i].substr(8).replace(/\+/g,' ').replace(/,/g,'] OR [')) + ']</dd>';
-            // parse dates
-            } else if (u[i].substr(0,7) == 'before=') {
-              s += '<dt>Before</dt>';
-              l = decodeURIComponent(u[i].substr(7));
-              if (l.substr(0,12) == 'publication:') {
-                l = l.replace('publication:','Publication Date: ');
-              } else if (l.substr(0,7) == 'filing:') {
-                l = l.replace('filing:','Filing Date: ');
-              } else {
-                l = 'Priority Date: ' + l;
-              }
-              s += '<dd>' + l + '</dd>';
-            } else if (u[i].substr(0,6) == 'after=') {
-              s += '<dt>After</dt>';
-              l = decodeURIComponent(u[i].substr(6));
-              if (l.substr(0,12) == 'publication:') {
-                l = l.replace('publication:','Publication Date: ');
-              } else if (l.substr(0,7) == 'filing:') {
-                l = l.replace('filing:','Filing Date: ');
-              } else {
-                l = 'Priority Date: ' + l;
-              }
-              s += '<dd>' + l + '</dd>';
+        hu = new URL(h.url);
+        if ((hu.hostname === 'patents.google.com')) {
+          const params = new URL(h.url).searchParams;
+          if (params.get('q')) {
+            s = '<dl>'
+            for (const [index, kwg] of params.getAll('q').entries()) {
+              s += '<dt>Search term ' + (index + 1) + '</dt>';
+              s += '<dd>' + kwg + '</dd>';
             }
+            s += '</dl>';
+            if (params.get('inventor')) {
+              s += '<dt>Inventor(s)</dt>';
+              s += '<dd> [' + params.get('inventor').replace(/,/g,'] OR [') + ']</dd>';
+            }
+            if (params.get('assignee')) {
+              s += '<dt>Assignee(s)</dt>';
+              for (const asn of params.getAll('assignee')) {
+                s += '<dd> [' + asn.replace(/,/g,'] OR [') + ']</dd>';
+              }
+            }
+            if (params.get('country')) {
+              s += '<dt>Patent Office(s)</dt>';
+              for (const asn of params.getAll('country')) {
+                s += '<dd> [' + asn.replace(/,/g,'] OR [') + ']</dd>';
+              }
+            }
+            if (params.get('language')) {
+              s += '<dt>Language(s)</dt>';
+              for (const asn of params.getAll('language')) {
+                s += '<dd> [' + asn.replace(/,/g,'] OR [').toLowerCase() + ']</dd>';
+              }
+            }
+            if (params.get('after')) {
+              [label, date] = decodeURIComponent(params.get('after')).split(':');
+              label = label.replace(/^[a-z]/, char => char.toUpperCase());
+              s += '<dt>' + label + ' date is after</dt>';
+              s += '<dd>' + date + '</dd>';
+            }
+            if (params.get('before')) {
+              [label, date] = decodeURIComponent(params.get('before')).split(':');
+              label = label.replace(/^[a-z]/, char => char.toUpperCase());
+              s += '<dt>' + label + ' date is before</dt>';
+              s += '<dd>' + date + '</dd>';
+            }
+            return s;
+          } else {
+            return;
           }
-          s += '</dl>';
         } else {
-          s = '';
+          return;
         }
-        return s;
       }
     },
     {'website':'Google',
