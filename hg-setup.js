@@ -1,5 +1,5 @@
 /*
-Written by Soren Harward <soren.harward@uspto.gov>, 2015-2023
+Written by Soren Harward <soren.harward@uspto.gov>, 2015-2025
 
 This software was made by an employee of the United States Government as part
 of his official duties. As such, it is not subject to copyright in the United
@@ -149,39 +149,57 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
     {'website':'Google Scholar',
       'matchpattern':'scholar.google.com',
       'queryextractor':function(h) {
-        if (h.title.slice(0,-14) == 'Google Scholar') {
-          return h.title.slice(0,-17);
-        } else {
-          console.log(h);
-          u = h.url.split('?')[1];
-          isActuallyAQuery = false;
-          if (u) {
-            u = u.split('&');
-            s = '';
-            for (var i = 0; i < u.length; i++) {
-              if (u[i].substr(0,2) == 'q=') {
-                if (u[i].substr(0,9) != 'q=related') {
-                  isActuallyAQuery = true;
-                  s += decodeURIComponent(u[i].substr(2)).replace(/\+/g,' ') + ' ';
-                }
-              } else if (u[i].substr(0,6) == 'as_yhi') {
-                y = u[i].substr(7);
-                if (y) {
-                  s += '[before:' + y + '] ';
-                }
-              } else if (u[i].substr(0,6) == 'as_ylo') {
-                y = u[i].substr(7);
-                if (y) {
-                  s += '[after:' + y + '] ';
-                }
-              }
-            }
-            if (isActuallyAQuery) {
-              return s;
-            }
-          } else {
-            return;
+        const params = new URL(h.url).searchParams;
+        if (params.has('q') && (params.get('q') !== 'related')) {
+          s = params.getAll('q').join(' ');
+          if (params.get('as_ylo')) {
+            s += ' [after:' + params.get('as_ylo') + ']';
           }
+          if (params.get('as_yhi')) {
+            s += ' [before:' + params.get('as_yhi') + ']';
+          }
+          return s;
+        } else if (params.has('as_q')) {
+          s = '<dl>'
+          /* TODO: append "title only" to keyword labels when as_occt=title */
+          for (const [index, kwg] of params.getAll('as_q').entries()) {
+            s += '<dt>Search term ' + (index + 1) + '</dt>';
+            s += '<dd>' + kwg + '</dd>';
+          }
+          if (params.get('as_epq')) {
+            s += '<dt>Exact phrase</dt>';
+            s += '<dd>' + params.get('as_epq') + '</dd>';
+          }
+          if (params.get('as_oq')) {
+            s += '<dt>At least one of</dt>';
+            s += '<dd>' + params.getAll('as_oq').join(' ') + '</dd>';
+          }
+          if (params.get('as_eq')) {
+            s += '<dt>Without keywords</dt>';
+            s += '<dd>' + params.getAll('as_eq').join(' ') + '</dd>';
+          }
+          if (params.get('as_publication')) {
+            s += '<dt>Published in</dt>';
+            s += '<dd>' + params.get('as_publication') + '</dd>';
+          }
+          if (params.get('as_sauthors')) {
+            s += '<dt>Author(s)</dt>';
+            for (const a of params.getAll('as_sauthors')) {
+              s += '<dd>' + a + '</dd>';
+            }
+          }
+          if (params.get('as_ylo')) {
+            s += '<dt>Published after</dt>';
+            s += '<dd>' + params.get('as_ylo') + '</dd>';
+          }
+          if (params.get('as_yhi')) {
+            s += '<dt>Published before</dt>';
+            s += '<dd>' + params.get('as_yhi') + '</dd>';
+          }
+          s += '</dl>';
+          return s;
+        } else {
+          return;
         }
       }
     },
@@ -196,6 +214,7 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
           && ((h.url.substr(0,30) == 'https://patents.google.com/?q=') ||
             (h.url.substr(0,38) == 'https://patents.google.com/advanced?q='))
         ) {
+          /* FIXME: rewrite to use URL(h.url).searchParams */
           u = h.url.split('?')[1];
           u = u.split('&');
           s = '<dl>';
