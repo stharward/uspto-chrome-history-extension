@@ -29,22 +29,22 @@ OR OTHER DEALINGS IN THE SOFTWARE.
 
 function makeCheckBoxToggler(mastercb, cblist) {
   return function() {
-    for (var i=0; i<cblist.length; i++) {
+    for (i=0; i<cblist.length; i++) {
       cblist[i].checked = mastercb.checked;
     }
   }
 }
 
 function renderHistoryTable(divName, website, historyData) {
-  var d = document.getElementById(divName);
+  d = document.getElementById(divName);
 
   // generate header
-  var t = document.createElement('table');
+  t = document.createElement('table');
   t.className = 'selectable';
-  var h = t.createTHead();
-  var hr = h.insertRow(0);
-  var hc = hr.insertCell(0);
-  var hcb = document.createElement('input');
+  h = t.createTHead();
+  hr = h.insertRow(0);
+  hc = hr.insertCell(0);
+  hcb = document.createElement('input');
   hcb.type = 'checkbox';
   hcb.checked = false;
   hc.appendChild(hcb);
@@ -53,18 +53,18 @@ function renderHistoryTable(divName, website, historyData) {
   hc.textContent = "searches on " + website;
 
   // generate body
-  var childcbs = [];
-  var tBody = document.createElement('tbody');
-  var lastvisit = 0;
-  var border = ''
-  for (var i = 0; i < historyData.length; ++i) {
+  childcbs = [];
+  tBody = document.createElement('tbody');
+  lastvisit = 0;
+  border = ''
+  for (i = 0; i < historyData.length; ++i) {
     // put a subtle visual separator between queries that happened more than 1 hour apart
-    var brd = ((lastvisit - historyData[i]['lastvisit']) > 3600000) ? 'thin solid #009' : 'none';
+    brd = ((lastvisit - historyData[i]['lastvisit']) > 3600000) ? 'thin solid #009' : 'none';
     lastvisit = historyData[i]['lastvisit'];
 
-    var r = tBody.insertRow(i);
-    var tc = r.insertCell(0);
-    var cb = document.createElement('input');
+    r = tBody.insertRow(i);
+    tc = r.insertCell(0);
+    cb = document.createElement('input');
     cb.type = 'checkbox';
     cb.className = 'historyentry';
     cb.value = JSON.stringify(historyData[i]);
@@ -88,12 +88,12 @@ function renderHistoryTable(divName, website, historyData) {
 function makeHistoryItemProcessor(divName, website, queryExtractionF, shortQueryThreshold) {
   return function historyItemProcessor(historyItems) {
 
-    var tableEntries = [];
-    var keptHistoryItems = [];
+    tableEntries = [];
+    keptHistoryItems = [];
     if (historyItems.length > 0) {
-      var queries = {}
-      for (var i = historyItems.length - 1; i >= 0; --i) {
-        var e = {
+      queries = {}
+      for (i = historyItems.length - 1; i >= 0; --i) {
+        e = {
           'website': website,
           'url': historyItems[i].url,
           'query': queryExtractionF(historyItems[i]),
@@ -101,6 +101,7 @@ function makeHistoryItemProcessor(divName, website, queryExtractionF, shortQuery
           'timestamp': (new Date(historyItems[i].lastVisitTime)).toLocaleString().replace(/[, ]+/g, '&nbsp;'),
           'id': historyItems[i].id
         };
+        //console.log(website, historyItems[i], e);
         if (e['query']) {
           // filter out duplicate queries; Chrome creates different history entries 
           // when the user goes to the 2nd, 3rd, etc. page of search results, because
@@ -114,40 +115,62 @@ function makeHistoryItemProcessor(divName, website, queryExtractionF, shortQuery
       }
     }
 
+    //console.log(website, keptHistoryItems);
     if (keptHistoryItems.length > 0) {
       tableEntries.push(keptHistoryItems[0]);
 
       // keep only the queries that were viewed for longer than shortQueryThreshold milliseconds
-      for (var i = 1; i < keptHistoryItems.length; ++i) {
-        var d = keptHistoryItems[i-1].lastvisit - keptHistoryItems[i].lastvisit;
+      for (i = 1; i < keptHistoryItems.length; ++i) {
+        d = keptHistoryItems[i-1].lastvisit - keptHistoryItems[i].lastvisit;
         //console.log(i, keptHistoryItems[i].lastvisit, d);
         if (d > shortQueryThreshold) {
           tableEntries.push(keptHistoryItems[i]);
         }
       }
-
     }
     renderHistoryTable(divName, website, tableEntries);
   };
 }
 
 function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
-  var cutoffTime = (new Date).getTime() - (1000 * cutoff);
+  cutoffTime = (new Date).getTime() - (1000 * cutoff);
 
   // clear the existing entries
   document.getElementById(divName).textContent = '';
 
-  var websites = [
+  /* searching history for different sites would be a lot more elegant with a
+   * regex, but browser.history.search() doesn't officially support regexes in
+   * the 'text' parameter. I tried it anyway, and it seems comically
+   * inconsistent about what regex features it does support. */
+  const websites = [
     {'website':'Google Books',
-      'matchpattern':'tbm=bks',
-      'queryextractor':function(h) { return h.title.slice(0,-15); }
+      'matchpattern':'google.com/search?q=',
+      'queryextractor':function(h) {
+        const params = new URL(h.url).searchParams;
+        s = '';
+        if (params.get('udm') === '36') {
+          if (params.has('q')) {
+            s = params.getAll('q').join(' ');
+          }
+        }
+        return s;
+      }
     },
     {'website':'Google Images',
-      'matchpattern':'tbm=isch',
-      'queryextractor':function(h) { return h.title.slice(0,-15); }
+      'matchpattern':'google.com/search?q=',
+      'queryextractor':function(h) {
+        const params = new URL(h.url).searchParams;
+        s = '';
+        if (params.get('udm') === '2') {
+          if (params.has('q')) {
+            s = params.getAll('q').join(' ');
+          }
+        }
+        return s;
+      }
     },
     {'website':'Google Scholar',
-      'matchpattern':'scholar.google.com',
+      'matchpattern':'scholar.google.com/',
       'queryextractor':function(h) {
         const params = new URL(h.url).searchParams;
         if (params.has('q') && (params.get('q') !== 'related')) {
@@ -204,13 +227,13 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
       }
     },
     {'website':'Google Patents',
-      'matchpattern':'patents.google.com',
+      'matchpattern':'patents.google.com/',
       'queryextractor':function(h) {
         hu = new URL(h.url);
         if ((hu.hostname === 'patents.google.com')) {
           const params = new URL(h.url).searchParams;
           if (params.get('q')) {
-            s = '<dl>'
+            s = '<dl>';
             for (const [index, kwg] of params.getAll('q').entries()) {
               s += '<dt>Search term ' + (index + 1) + '</dt>';
               s += '<dd>' + kwg + '</dd>';
@@ -259,9 +282,19 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
         }
       }
     },
-    {'website':'Google',
-      'matchpattern':'google.com/search?q=',
-      'queryextractor':function(h) { return h.title.slice(0,-15); }
+    {'website':'Google Web Search',
+      'matchpattern':'google.com/search?q',
+      'queryextractor':function(h) {
+        const params = new URL(h.url).searchParams;
+        s = '';
+        // vanilla Google searches don't have the UDM parameter
+        if (params.get('udm') === null) {
+          if (params.has('q')) {
+            s = params.getAll('q').join(' ');
+          }
+        }
+        return s;
+      }
     },
     {'website':'IEEE Xplore',
       'matchpattern':'ieeexplore.ieee.org/search/searchresult.jsp?',
@@ -269,7 +302,7 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
     }
   ]
 
-  for (var i = 0; i < websites.length; i++) {
+  for (i = 0; i < websites.length; i++) {
     w = websites[i];
     chrome.history.search({
         'maxResults': 10000,      // defaults to 100, but some examiners have many more

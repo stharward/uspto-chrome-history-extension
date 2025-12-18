@@ -29,7 +29,7 @@ OR OTHER DEALINGS IN THE SOFTWARE.
 
 function generateHistoryPage() {
   f = document.forms['historyEntriesForm'].querySelectorAll('input.historyentry');
-  var entries = []
+  entries = []
   for (i = 0; i < f.length; i++) {
     if (f[i].checked) {
       entries.push(JSON.parse(f[i].value));
@@ -38,11 +38,11 @@ function generateHistoryPage() {
 
   entries.sort(function(a,b){return a.lastvisit - b.lastvisit});
 
-  var h = document.createElement('h1');
+  h = document.createElement('h1');
   h.textContent = 'Web Search History';
   document.getElementById('printable_div').appendChild(h);
   
-  var t = document.createElement('table');
+  t = document.createElement('table');
   t.className = 'printable';
   h = t.createTHead();
   hr = h.insertRow(0);
@@ -54,7 +54,7 @@ function generateHistoryPage() {
   hc = hr.insertCell(2);
   hc.textContent = 'search string';
 
-  var tBody = document.createElement('tbody');
+  tBody = document.createElement('tbody');
   for (var i = 0; i < entries.length; ++i) {
     r = tBody.insertRow(i);
     tc = r.insertCell(0);
@@ -75,15 +75,15 @@ function generateHistoryPage() {
 }
 
 function regenSelectionList() {
-  var s = document.getElementById('cutoffSelector');
+  s = document.getElementById('cutoffSelector');
   ct = s.options[s.selectedIndex].value;
-  var s = document.getElementById('shortQuerySelector');
+  s = document.getElementById('shortQuerySelector');
   sq = s.options[s.selectedIndex].value;
   buildAvailableHistoryList("availableHistoryList_div", ct, sq);
 }
 
 function toggleAboutSection() {
-  var s = document.getElementById('about_div');
+  s = document.getElementById('about_div');
   if (s.style.display === "none") {
     s.style.display = "block";
   } else {
