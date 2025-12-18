@@ -203,10 +203,6 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
         }
       }
     },
-    {'website':'Google Patents (old)',
-      'matchpattern':'tbm=pts',
-      'queryextractor':function(h) { return h.title.slice(0,-16); }
-    },
     {'website':'Google Patents',
       'matchpattern':'patents.google.com',
       'queryextractor':function(h) {
