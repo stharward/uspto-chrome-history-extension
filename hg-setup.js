@@ -296,6 +296,39 @@ function buildAvailableHistoryList(divName, cutoff, shortQueryThreshold) {
         return s;
       }
     },
+    {'website':'Bing Web Search',
+      'matchpattern':'bing.com/search?q',
+      'queryextractor':function(h) {
+        const params = new URL(h.url).searchParams;
+        s = '';
+        if (params.has('q')) {
+          s = params.getAll('q').join(' ');
+        }
+        return s;
+      }
+    },
+    {'website':'Bing Images',
+      'matchpattern':'bing.com/images/search?q',
+      'queryextractor':function(h) {
+        const params = new URL(h.url).searchParams;
+        s = '';
+        if (params.has('q')) {
+          s = params.getAll('q').join(' ');
+        }
+        return s;
+      }
+    },
+    {'website':'Bing Copilot Search',
+      'matchpattern':'bing.com/copilotsearch?q',
+      'queryextractor':function(h) {
+        const params = new URL(h.url).searchParams;
+        s = '';
+        if (params.has('q')) {
+          s = params.getAll('q').join(' ');
+        }
+        return s;
+      }
+    },
     {'website':'IEEE Xplore',
       'matchpattern':'ieeexplore.ieee.org/search/searchresult.jsp?',
       'queryextractor':function(h) { return (new URLSearchParams(h.url)).get('queryText'); }
