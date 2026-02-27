@@ -2,8 +2,8 @@
   "manifest_version": 3,
 
   "name": "Search History Generator",
-  "description": "Generate a search history for supported websites that can easily be 'printed' into e-Red Folder",
-  "version": "6",
+  "description": "Generate a search history for supported websites that can easily be 'printed' into an OC set",
+  "version": "7",
   "action": {
     "default_icon": "icon64.png"
   },
